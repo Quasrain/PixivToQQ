@@ -7,19 +7,19 @@ from urllib.request import urlopen
 from urllib.parse import quote
 
 # on_command 装饰器将函数声明为一个命令处理器
-# 这里 weather 为命令的名字，同时允许使用别名「天气」「天气预报」「查天气」
+# 这里 pixiv为命令的名字，同时允许使用别名「pictures」
 @on_command('pixiv', aliases=('pictures'))
 async def pixiv(session: CommandSession):
-    # 从会话状态（session.state）中获取城市名称（city），如果当前不存在，则询问用户
+    # 从会话状态（session.state）中获取tag，如果当前不存在，则询问用户
     tag = session.get('tag', prompt='你想看哪个老婆呢？')
-    # 获取城市的天气预报
+    # 获取在pixiv年鉴上排行最高的十张图片
     for i in range(10):
         pictures = await get_url_of_tag(tag,i)
-    # 向用户发送天气预报
+    # 向用户发送这些图片
         await session.send(pictures)
 
 
-# weather.args_parser 装饰器将函数声明为 weather 命令的参数解析器
+# pixiv.args_parser 装饰器将函数声明为 pixiv 命令的参数解析器
 # 命令解析器用于将用户输入的参数解析成命令真正需要的数据
 @pixiv.args_parser
 async def _(session: CommandSession):
@@ -29,13 +29,13 @@ async def _(session: CommandSession):
     if session.is_first_run:
         # 该命令第一次运行（第一次进入命令会话）
         if stripped_arg:
-            # 第一次运行参数不为空，意味着用户直接将城市名跟在命令名后面，作为参数传入
-            # 例如用户可能发送了：天气 南京
+            # 第一次运行参数不为空，意味着用户直接将tag跟在命令名后面，作为参数传入
+            # 例如用户可能发送了 pixiv saber
             session.state['tag'] = stripped_arg
         return
 
     if not stripped_arg:
-        # 用户没有发送有效的城市名称（而是发送了空白字符），则提示重新输入
+        # 用户没有发送有效的tag（而是发送了空白字符），则提示重新输入
         # 这里 session.pause() 将会发送消息并暂停当前会话（该行后面的代码不会被运行）
         session.pause('要查询的老婆名称不能为空呢，请重新输入')
 
@@ -43,8 +43,6 @@ async def _(session: CommandSession):
     session.state[session.current_key] = stripped_arg
 
 async def get_url_of_tag(tag: str,k) -> str:
-    # 这里简单返回一个字符串
-    # 实际应用中，这里应该调用返回真实数据的天气 API，并拼接成天气预报内容
     tag = quote(tag)
     url = 'http://pixiv.navirank.com/search/?words='+tag+'&mode=0&type=0&comp=0'
     trueurl = 'http://pixiv.navirank.com/jpg'
