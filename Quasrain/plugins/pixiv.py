@@ -4,6 +4,8 @@ import requests
 import re
 import os
 from urllib.request import urlopen
+from urllib.parse import quote
+
 # on_command 装饰器将函数声明为一个命令处理器
 # 这里 weather 为命令的名字，同时允许使用别名「天气」「天气预报」「查天气」
 @on_command('pixiv', aliases=('pictures'))
@@ -43,6 +45,7 @@ async def _(session: CommandSession):
 async def get_url_of_tag(tag: str,k) -> str:
     # 这里简单返回一个字符串
     # 实际应用中，这里应该调用返回真实数据的天气 API，并拼接成天气预报内容
+    tag = quote(tag)
     url = 'http://pixiv.navirank.com/tag/'+tag
     trueurl = 'http://pixiv.navirank.com/jpg'
     path = 'C:/tools/CQP-xiaoi/酷Q Pro/data/image'
