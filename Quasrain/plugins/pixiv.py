@@ -13,7 +13,7 @@ async def pixiv(session: CommandSession):
     # 从会话状态（session.state）中获取城市名称（city），如果当前不存在，则询问用户
     tag = session.get('tag', prompt='你想看哪个老婆呢？')
     # 获取城市的天气预报
-    for i in range(4):
+    for i in range(10):
         pictures = await get_url_of_tag(tag,i)
     # 向用户发送天气预报
         await session.send(pictures)
@@ -46,7 +46,7 @@ async def get_url_of_tag(tag: str,k) -> str:
     # 这里简单返回一个字符串
     # 实际应用中，这里应该调用返回真实数据的天气 API，并拼接成天气预报内容
     tag = quote(tag)
-    url = 'http://pixiv.navirank.com/tag/'+tag
+    url = 'http://pixiv.navirank.com/search/?words='+tag+'&mode=0&type=0&comp=0'
     trueurl = 'http://pixiv.navirank.com/jpg'
     path = 'C:/tools/CQP-xiaoi/酷Q Pro/data/image'
     html = urlopen(
@@ -63,9 +63,9 @@ async def get_url_of_tag(tag: str,k) -> str:
         filename = Res[1]+'.jpg'
         # print(trueurl+Res[0]+'\n')
         print(trueurl+urls+'\n')
-        ans = "[CQ:image,file="+trueurl+urls+"]"
         # ans = ans+"[CQ:image,file="+'1.jpg'+"]"
         # ans = ans + trueurl + urls+ '\n';
         if (cnt > k):
+            ans = "[CQ:image,file=" + trueurl + urls + "]"
             break
     return ans
