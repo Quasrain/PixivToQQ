@@ -47,4 +47,4 @@ Bucause CoolQ has no linux version, but we can run it in docker.
 Thanks for nonebot's very detailed instruction.\
 https://none.rclab.tk/
 
-Thanks for help from Akaisora.\
+Thanks for help from Akaisora.
