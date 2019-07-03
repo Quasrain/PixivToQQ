@@ -42,11 +42,10 @@ async def _(session: CommandSession):
     # 如果当前正在向用户询问更多信息（例如本例中的要查询的城市），且用户输入有效，则放入会话状态
     session.state[session.current_key] = stripped_arg
 
-async def get_url_of_tag(tag: str,k) -> str:
+async def get_url_of_tag(tag: str, k) -> str:
     tag = quote(tag)
     url = 'http://pixiv.navirank.com/search/?words='+tag+'&mode=0&type=0&comp=0'
     trueurl = 'http://pixiv.navirank.com/jpg'
-    path = 'C:/tools/CQP-xiaoi/酷Q Pro/data/image'
     html = urlopen(
         url
     ).read().decode('utf-8')
