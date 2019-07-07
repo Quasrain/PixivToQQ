@@ -16,7 +16,13 @@ async def pixiv(session: CommandSession):
     for i in range(10):
         pictures = await get_url_of_tag(tag,i)
     # 向用户发送这些图片
+        if (pictures == 'none'):
+            if (i==0):
+                await session.send(pictures)
+                break
         await session.send(pictures)
+        if (pictures == 'none'):
+            break
 
 
 # pixiv.args_parser 装饰器将函数声明为 pixiv 命令的参数解析器
@@ -51,7 +57,7 @@ async def get_url_of_tag(tag: str, k) -> str:
     ).read().decode('utf-8')
     Pattern = re.compile('/[a-zA-Z0-9]+/[a-zA-Z0-9]+.jpg')
     result = Pattern.findall(html)
-    ans = ""
+    ans = "none"
     cnt = 0
     for urls in result:
         cnt =cnt+1
@@ -59,10 +65,10 @@ async def get_url_of_tag(tag: str, k) -> str:
         Res = Pattern.findall(urls)
         filename = Res[1]+'.jpg'
         # print(trueurl+Res[0]+'\n')
-        print(trueurl+urls+'\n')
         # ans = ans+"[CQ:image,file="+'1.jpg'+"]"
         # ans = ans + trueurl + urls+ '\n';
         if (cnt > k):
             ans = "[CQ:image,file=" + trueurl + urls + "]"
+            print(trueurl + urls + '\n')
             break
     return ans
